@@ -1,0 +1,3 @@
+# backend for the MedicAdvicer and FoodNutrition
+# to run and allow changes : npx nodemon app.js
+# to create root folder Automatic run : npx express-generator
