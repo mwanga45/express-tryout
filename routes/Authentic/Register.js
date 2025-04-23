@@ -25,12 +25,14 @@ router.post(
       let query = "SELECT 1 FROM users  WHERE email = $1";
       const { rows: existing } = (await Pool).query(query, [email]);
       if (existing.lenght > 0){
-        return res.status(500).json({message:"Please that email is already been used"})
+        return res.status(409).json({message:"Please that email is already been used"})
       }
-      
-      const result = (await Pool).query("INSERT INTO 'users'(firstname, secondname, email, password) VALUES($1,$2,3$,4$)")
+      const salt = await bycrpt.genSalt(10)
+      const hashpassword = await bycrpt.hash(password, salt)
+      const result = (await Pool).query("INSERT INTO 'users'(firstname, secondname, email, password) VALUES($1,$2,3$,4$)", [firstname, secondname, email, hashpassword])
     } catch (err) {
       console.error("Something went wrong in server", err);
+      return res.status(500).json({message:"Server Error"})
     }
   }
 );
