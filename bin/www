@@ -32,8 +32,8 @@ server.on('listening', onListening);
 app.get('/dbpool', async(req,res,next)=>{
   try{
     const pool = await Poolconnection;
-    const {rows} = await pool.query.apply("SELECT NOW()")
-    res.json({now:rows[0].now})
+    const result = await pool.query.query("SELECT NOW()")
+    res.json({now:result.rows[0].now})
   
   }catch(err){
     console.log(err)
