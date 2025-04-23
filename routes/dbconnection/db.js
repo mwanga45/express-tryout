@@ -1,6 +1,7 @@
 require('dotenv').config();
 const { Pool, Client } = require('pg');
 const { host, port, user, password, database } = process.env;
+const initializeTable = require("./dabasetable")
 
 async function ensureDatabaseExists() {
   const adminClient = new Client({
@@ -40,7 +41,7 @@ async function initPool() {
     max: 20,               
     idleTimeoutMillis: 3000 
   });
-
+   initializeTable()
 
   const { rows } = await pool.query('SELECT NOW()');
   console.log('Connected to database at', rows[0].now);
