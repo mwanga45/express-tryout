@@ -1,8 +1,9 @@
 require("dotenv").config();
+var express = require('express')
 var Pool = require("../dbconnection/db");
-var { body, validateResult } = require("express-validator");
+var { body, validationResult } = require("express-validator");
 var bycrpt = require("bcrypt");
-const router = require("express");
+const router = express.Router()
 
 router.post(
   "/register",
@@ -14,8 +15,8 @@ router.post(
       .isLength({ min: 6 })
       .withMessage("Please Enter password with minimum of six character"),
   ],
-  async (req, res) => {
-    const error = validateResult(req);
+  async(req,res) => {
+    const error = validationResult(req);
     if (!error.isEmpty()) {
       return res.status(404).json({ error: error.array() });
     }
@@ -29,7 +30,7 @@ router.post(
       }
       const salt = await bycrpt.genSalt(10)
       const hashpassword = await bycrpt.hash(password, salt)
-      const result = (await Pool).query("INSERT INTO 'users'(firstname, secondname, email, password) VALUES($1,$2,3$,4$)", [firstname, secondname, email, hashpassword])
+      const result = (await Pool).query("INSERT INTO 'users'(firstname, secondname, email, password) VALUES($1,$2,$3,$4)", [firstname, secondname, email, hashpassword])
     } catch (err) {
       console.error("Something went wrong in server", err);
       return res.status(500).json({message:"Server Error"})
